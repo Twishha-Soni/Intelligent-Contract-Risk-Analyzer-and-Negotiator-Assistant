@@ -3,7 +3,9 @@
 /.vscode
 /backend/.venv
 /backend/app/database/__pycache__/
-/backend/.python-version
 /backend/app/models/__pycache__/
+/backend/app/utils/__pycache__/
+/backend/app/services/__pycache__/
+/backend/app/api/__pycache__/
 /backend/uv.lock
 /backend/.env
