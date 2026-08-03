@@ -12,6 +12,7 @@ dependencies = [
     "pymupdf==1.28.0",
     "python-docx==1.2.0",
     "qdrant-client>=1.18.0",
+    "reportlab>=5.0.0",
     "scikit-learn>=1.7.2",
     "sentence-transformers>=5.6.1",
     "typing-extensions==4.16.0",
