@@ -5,9 +5,14 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "dotenv>=0.9.9",
     "fastapi>=0.141.1",
+    "fastembed>=0.8.0",
     "lxml==6.1.1",
     "pymupdf==1.28.0",
     "python-docx==1.2.0",
+    "qdrant-client>=1.18.0",
+    "scikit-learn>=1.7.2",
+    "sentence-transformers>=5.6.1",
     "typing-extensions==4.16.0",
 ]

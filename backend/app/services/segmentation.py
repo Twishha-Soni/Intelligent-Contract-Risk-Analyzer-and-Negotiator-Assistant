@@ -1,6 +1,6 @@
 import re
-from backend.utils.extraction import Line, extract_lines
-from backend.models.clause import Clause
+from app.utils.extraction import Line, extract_lines
+from app.models.clause import Clause
 
 # ---- Orchestration ----
 def segment_contract(path: str) -> list[Clause]:
