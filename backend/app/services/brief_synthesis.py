@@ -7,7 +7,7 @@ from app.models.brief import NegotiationBrief
 from app.services.prioritization import get_prioritized_rows
 
 load_dotenv()
-_client = genai.Client(api_key=os.getenv('GENERATION_KEY'))
+_client = genai.Client(api_key=os.getenv('GENERATOR_KEY'))
 
 
 SYNTHESIS_PROMPT = """You are drafting a one-page negotiation brief for a contract reviewer.
@@ -29,7 +29,7 @@ def generate_brief() -> tuple[NegotiationBrief, list[dict]]:
     )
 
     response = _client.models.generate_content(
-        model='gemini-2.5-flash',
+        model='gemini-3.1-flash-lite',
         contents=prompt,
         config={
             'response_mime_type': 'application/json',

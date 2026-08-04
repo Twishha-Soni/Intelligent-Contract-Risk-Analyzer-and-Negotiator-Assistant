@@ -50,7 +50,7 @@ def _hybrid_query(clause_text: str, category_filter: models.Filter | None, limit
     sparse_vec = embed_sparse(clause_text)
 
     return client.query_points(
-        collecion_name=COLLECTION_NAME,
+        collection_name=COLLECTION_NAME,
         prefetch=[
             models.Prefetch(query=dense_vec, using='dense', limit=PREFETCH_LIMIT, filter=category_filter),
             models.Prefetch(query=sparse_vec, using='bm25', limit=PREFETCH_LIMIT, filter=category_filter)

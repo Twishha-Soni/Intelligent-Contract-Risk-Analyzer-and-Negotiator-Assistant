@@ -1,6 +1,6 @@
 from app.database.db import get_connection
 
-SEVERITY = {'HIGH': 3, 'MEDIUM': 2, 'LOW': 1}
+SEVERITY = {'High': 3, 'Medium': 2, 'Low': 1}
 
 def get_prioritized_rows(contract_id_filter: str | None = None) -> tuple[list[dict], int]:
     conn = get_connection()

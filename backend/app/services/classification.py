@@ -49,11 +49,11 @@ def classify_clause(clause: Clause, playbook_chunks: list[dict]) -> ClauseClassi
     prompt = CLASSIFICATION_PROMPT.format(
         section=clause.section,
         clause_text=clause.clause_text,
-        _format_playbook_context=_format_playbook_context(playbook_chunks)
+        playbook_context=_format_playbook_context(playbook_chunks)
     )
 
     response = _client.models.generate_content(
-        model='gemini-2.5-flash',
+        model='gemini-3.1-flash-lite',
         contents=prompt,
         config={
             'response_mime_type': 'application/json',
