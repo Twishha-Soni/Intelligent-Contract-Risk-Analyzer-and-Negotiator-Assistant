@@ -1,5 +1,5 @@
 from app.models.playbook_chunk import PlaybookChunk
-from app.services.segmentation import is_section_header
+from app.services.Retrieve.segmentation import is_section_header
 from app.utils.extraction import extract_pdf_lines
 
 def chunk_playbook(path: str) -> list[PlaybookChunk]:

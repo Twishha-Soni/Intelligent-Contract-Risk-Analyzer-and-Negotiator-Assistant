@@ -2,7 +2,7 @@
 from qdrant_client.models import PointStruct
 
 from app.database.vector_store import get_client, ensure_collection, COLLECTION_NAME
-from app.services.playbook_chunker import chunk_playbook
+from app.services.Ingest.playbook_chunker import chunk_playbook
 from app.services.metadata import classify_category
 from app.models.playbook_chunk import PlaybookChunk
 from app.services.bm25_index import embed_sparse

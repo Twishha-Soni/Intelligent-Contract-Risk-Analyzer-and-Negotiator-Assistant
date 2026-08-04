@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 
 from app.models.brief import NegotiationBrief
-from app.services.prioritization import get_prioritized_rows
+from app.services.Generate.prioritization import get_prioritized_rows
 
 load_dotenv()
 _client = genai.Client(api_key=os.getenv('GENERATOR_KEY'))

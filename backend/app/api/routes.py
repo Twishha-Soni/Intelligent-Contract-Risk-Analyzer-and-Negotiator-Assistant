@@ -4,11 +4,11 @@ from fastapi.responses import FileResponse
 import time
 
 from app.utils.extraction import extract_lines
-from app.services.segmentation import segment_contract
-from app.services.retrieval import retrieve_playbook_context
-from app.services.classification import classify_and_store
-from app.services.brief_synthesis import generate_brief
-from app.services.pdf_export import export_brief_pdf
+from app.services.Retrieve.segmentation import segment_contract
+from app.services.Retrieve.retrieval import retrieve_playbook_context
+from app.services.Generate.classification import classify_and_store
+from app.services.Generate.brief_synthesis import generate_brief
+from app.services.Generate.pdf_export import export_brief_pdf
 from app.database.db import get_connection
 from app.models.feedback import FeedbackIn
 
