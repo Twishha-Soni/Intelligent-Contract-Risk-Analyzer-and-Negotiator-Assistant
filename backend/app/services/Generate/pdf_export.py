@@ -5,12 +5,12 @@ from reportlab.lib.units import inch
 
 from app.models.brief import NegotiationBrief
 
-def export_brief_pdf(brief: NegotiationBrief, output_path: str) -> str:
+def export_brief_pdf(brief: NegotiationBrief, output_path: str, contract_id: str) -> str:
     doc = SimpleDocTemplate(output_path, pagesize=LETTER,
                             topMargin=0.6 * inch, bottomMargin=0.6 * inch)
     styles = getSampleStyleSheet()
     story = [
-        Paragraph('Negotiation Brief', styles['Title']),
+        Paragraph(f'Negotiation Brief for {contract_id}', styles['Title']),
         Spacer(1, 12),
         Paragraph(brief.overview, styles['BodyText']),
         Spacer(1, 16)

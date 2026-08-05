@@ -16,6 +16,7 @@ router = APIRouter()
 
 @router.post('/contracts/analyze')
 async def analyze_contract(file: UploadFile):
+    contract_id = os.path.splitext(file.filename)[0]
     suffix = '.pdf' if file.filename.lower().endswith('.pdf') else '.docx'
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
         tmp.write(await file.read())
@@ -26,7 +27,7 @@ async def analyze_contract(file: UploadFile):
         results = []
         for clause in clauses:
             playbook_chunks = retrieve_playbook_context(clause)
-            classification = classify_and_store(clause, playbook_chunks)
+            classification = classify_and_store(clause, playbook_chunks, contract_id)
             results.append({
                 "clause_id": clause.clause_id,
                 "section": clause.section,
@@ -36,27 +37,27 @@ async def analyze_contract(file: UploadFile):
                 "suggested_language": classification.suggested_language,
                 "matched_playbook_ids": classification.matched_playbook_ids,
             })
-            time.sleep(5)
-        return {'clause_count': len(results), 'clauses': results}
+            time.sleep(4)
+        return {'contract_id': contract_id, 'clause_count': len(results), 'clauses': results}
     finally:
         os.unlink(tmp_path)
 
-@router.get('/contracts/brief')
-async def get_brief():
-    brief, flagged_rows = generate_brief()
+@router.get('/contracts/{contract_id}/brief')
+async def get_brief(contract_id: str):
+    brief, flagged_rows = generate_brief(contract_id)
     if not flagged_rows:
         raise HTTPException(status_code=404, detail='No flagged clauses to summarize')
 
-    output_path = 'app/database/negotiation_brief.pdf'
-    export_brief_pdf(brief, output_path)
-    return FileResponse(output_path, media_type='application/pdf', filename='negotiation_brief.pdf')
+    output_path = 'app/database/negotiation_brief_{contract_id}.pdf'
+    export_brief_pdf(brief, output_path, contract_id)
+    return FileResponse(output_path, media_type='application/pdf', filename='{contract_id}_negotiation_brief.pdf')
 
 @router.post('/feedback')
 async def submit_feedback(feedback: FeedbackIn):
     conn = get_connection()
     conn.execute(
-        "INSERT INTO feedback (clause_id, action, edited_suggestion) VALUES (?,?,?)",
-        (feedback.clause_id, feedback.action, feedback.edited_suggestion)
+        "INSERT INTO feedback (contract_id, clause_id, action, edited_suggestion) VALUES (?, ?,?,?)",
+        (feedback.contract_id, feedback.clause_id, feedback.action, feedback.edited_suggestion)
     )
     conn.commit()
     conn.close()

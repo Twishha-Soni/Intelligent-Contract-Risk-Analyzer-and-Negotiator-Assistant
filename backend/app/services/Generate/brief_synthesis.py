@@ -10,18 +10,49 @@ load_dotenv()
 _client = genai.Client(api_key=os.getenv('GENERATOR_KEY'))
 
 
-SYNTHESIS_PROMPT = """You are drafting a one-page negotiation brief for a contract reviewer.
+SYNTHESIS_PROMPT = """You are an experienced commercial contract attorney preparing a concise negotiation brief for an internal legal reviewer.
 
-The clauses below are already ranked by risk severity (High first, then Medium) — do not reorder them. There are also {low_count} Low-risk clauses not requiring attention.
+The clauses below have already been analyzed and ranked by risk severity.
+High-risk clauses appear first, followed by Medium-risk clauses.
+Do NOT change their order.
+
+There are {low_count} Low-risk clauses that require no immediate negotiation and should only be acknowledged in the overview.
 
 FLAGGED CLAUSES:
 {clause_summaries}
 
-Write a brief 2-3 sentence overview, then a negotiation_summary (1-2 sentences, actionable) for each clause in the same order given.
+Instructions:
+
+Write an executive overview (2–3 sentences) that:
+- summarizes the overall contractual risk profile,
+- highlights the primary negotiation themes,
+- mentions that {low_count} Low-risk clauses require no immediate attention.
+
+For every flagged clause, generate one negotiation point in the exact order provided.
+
+Each negotiation summary should:
+- explain why negotiation is recommended,
+- recommend one clear negotiation objective,
+- remain under 40 words,
+- use concise, professional language,
+- avoid unnecessary legal jargon,
+- be specific to the clause,
+- avoid repeating advice across clauses,
+- try to explain in simple words.
+
+Do NOT:
+- reorder clauses,
+- omit clauses,
+- invent facts,
+- introduce new legal risks,
+- discuss Low-risk clauses individually,
+- copy the clause summary verbatim.
+
+Return only JSON matching the required schema.
 """
 
-def generate_brief() -> tuple[NegotiationBrief, list[dict]]:
-    flagged_rows, low_count = get_prioritized_rows()
+def generate_brief(contract_id: str) -> tuple[NegotiationBrief, list[dict]]:
+    flagged_rows, low_count = get_prioritized_rows(contract_id)
 
     prompt = SYNTHESIS_PROMPT.format(
         low_count=low_count,

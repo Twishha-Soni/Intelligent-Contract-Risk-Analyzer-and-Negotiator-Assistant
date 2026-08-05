@@ -21,16 +21,17 @@ RETRIEVED PLAYBOOK CONTEXT:
 Classify this clause's risk level (Low/Medium/High) based on how it deviates from the playbook's standard position. Provide a rationale grounded in the specific playbook entries above, suggested replacement/fallback language, and list the chunk_ids of the playbook entries you actually relied on.
 """
 
-def classify_and_store(clause: Clause, playbook_chunks: list[dict]) -> ClauseClassification:
+def classify_and_store(clause: Clause, playbook_chunks: list[dict], contract_id: str) -> ClauseClassification:
     result = classify_clause(clause, playbook_chunks)
 
     conn = get_connection()
     conn.execute(
         """INSERT OR REPLACE INTO clause_classifications
-        (clause_id, section, clause_text, page_number, risk_level,
+        (contract_id, clause_id, section, clause_text, page_number, risk_level,
         rationale, suggested_language, matched_playbook_ids)
-        VALUES (?,?,?,?,?,?,?,?)""",
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
+            contract_id,
             clause.clause_id,
             clause.section,
             clause.clause_text,

@@ -7,14 +7,16 @@ def init_db() -> None:
     conn = get_connection()
     conn.execute("""
         CREATE TABLE IF NOT EXISTS clause_classifications (
-            clause_id TEXT PRIMARY KEY,
+            contract_id TEXT NOT NULL,
+            clause_id TEXT NOT NULL,
             section TEXT NOT NULL,
             clause_text TEXT NOT NULL,
             page_number INTERGER,
             risk_level TEXT NOT NULL,
             rationale TEXT NOT NULL,
             suggested_language TEXT NOT NULL,
-            matched_playbook_ids TEXT NOT NULL
+            matched_playbook_ids TEXT NOT NULL,
+            PRIMARY KEY (contract_id, clause_id)
         )
     """)
     conn.commit()
@@ -25,11 +27,12 @@ def init_feedback_table() -> None:
     conn.execute("""
         CREATE TABLE IF NOT EXISTS feedback (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        contract_id TEXT NOT NULL,
         clause_id TEXT NOT NULL,
         action TEXT NOT NULL,       --'accept' | 'reject' | 'edit'
         edited_suggestion TEXT,     -- populated only when action='edit'
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (clause_id) REFERENCES clause_classifications(clause_id)
+        FOREIGN KEY (contract_id, clause_id) REFERENCES clause_classifications(contract_id, clause_id)
         )
     """)
     conn.commit()

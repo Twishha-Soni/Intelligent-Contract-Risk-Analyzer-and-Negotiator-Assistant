@@ -15,15 +15,18 @@ if uploaded and st.button("Analyze"):
             files={"file": (uploaded.name, uploaded.getvalue())},
         )
     if resp.ok:
-        st.session_state["clauses"] = resp.json()["clauses"]
+        data = resp.json()
+        st.session_state["contract_id"] = data["contract_id"]
+        st.session_state["clauses"] = data["clauses"]
     else:
         st.error(resp.text)
 
 if "clauses" in st.session_state:
+    contract_id = st.session_state["contract_id"]
 
     if st.button("Generate Negotiation Brief"):
-        resp = requests.get(f"{API_URL}/contracts/brief")
+        resp = requests.get(f"{API_URL}/contracts/{contract_id}/brief")
         if resp.ok:
-            st.download_button("Download Brief PDF", resp.content, file_name="negotiation_brief.pdf")
+            st.download_button("Download Brief PDF", resp.content, file_name="negotiation_brief_{contract_id}.pdf")
         else:
             st.error(resp.text)

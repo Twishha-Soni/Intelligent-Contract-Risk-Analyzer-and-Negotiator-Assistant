@@ -8,3 +8,6 @@
 /backend/app/utils/__pycache__/
 /backend/app/services/__pycache__/
 /backend/app/api/__pycache__/
+/backend/app/services/Ingest/__pycache__/
+/backend/app/services/Retrieve/__pycache__/
+/backend/app/services/Generate/__pycache__/
