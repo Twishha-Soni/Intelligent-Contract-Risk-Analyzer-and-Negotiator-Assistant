@@ -27,6 +27,6 @@ if "clauses" in st.session_state:
     if st.button("Generate Negotiation Brief"):
         resp = requests.get(f"{API_URL}/contracts/{contract_id}/brief")
         if resp.ok:
-            st.download_button("Download Brief PDF", resp.content, file_name="negotiation_brief_{contract_id}.pdf")
+            st.download_button("Download Brief PDF", resp.content, file_name=f"negotiation_brief_{contract_id}.pdf")
         else:
             st.error(resp.text)

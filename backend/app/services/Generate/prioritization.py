@@ -6,7 +6,7 @@ def get_prioritized_rows(contract_id: str) -> tuple[list[dict], int]:
     conn = get_connection()
     rows = conn.execute(
         "SELECT * FROM clause_classifications WHERE contract_id = ? ORDER BY rowid ASC",
-        (contract_id)
+        (contract_id,)
     ).fetchall()
     conn.close()
 
