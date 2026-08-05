@@ -1,7 +1,11 @@
 import sqlite3
+import os
 from pathlib import Path
 
-DB_PATH = Path('app/database/contracts.db')
+FOLDER_PATH = Path('app/database/tempDB')
+os.makedirs(FOLDER_PATH, exist_ok=True)
+DB_PATH = Path(f'{FOLDER_PATH}/contracts.db')
+
 
 def init_db() -> None:
     conn = get_connection()
