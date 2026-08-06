@@ -20,6 +20,3 @@ def ensure_collection(client: QdrantClient) -> None:
                 'bm25': models.SparseVectorParams(modifier=models.Modifier.IDF)
             }
         )
-
-# if __name__ == '__main__':
-#     ensure_collection(get_client())

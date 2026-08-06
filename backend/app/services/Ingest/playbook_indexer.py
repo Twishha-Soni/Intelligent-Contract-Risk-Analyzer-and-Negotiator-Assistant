@@ -35,9 +35,3 @@ def index_playbook(path: str) -> int:
 
     client.upsert(collection_name=COLLECTION_NAME, points=points)
     return len(points)
-
-
-if __name__ == '__main__':
-    import sys
-    count = index_playbook(sys.argv[1])
-    print(f"Indexed {count} playbook chunks into '{COLLECTION_NAME}'")
