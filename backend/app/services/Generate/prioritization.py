@@ -5,7 +5,7 @@ SEVERITY = {'High': 3, 'Medium': 2, 'Low': 1}
 def get_prioritized_rows(contract_id: str) -> tuple[list[dict], int]:
     conn = get_connection()
     rows = conn.execute(
-        "SELECT * FROM clause_classifications WHERE contract_id = ? ORDER BY rowid ASC",
+        "SELECT rowid, * FROM clause_classifications WHERE contract_id = ? ORDER BY rowid ASC",
         (contract_id,)
     ).fetchall()
     conn.close()

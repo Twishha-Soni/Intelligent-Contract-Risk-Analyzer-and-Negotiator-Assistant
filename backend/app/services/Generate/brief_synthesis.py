@@ -14,7 +14,6 @@ SYNTHESIS_PROMPT = """You are an experienced commercial contract attorney prepar
 
 The clauses below have already been analyzed and ranked by risk severity.
 High-risk clauses appear first, followed by Medium-risk clauses.
-Do NOT change their order.
 
 There are {low_count} Low-risk clauses that require no immediate negotiation and should only be acknowledged in the overview.
 
@@ -28,30 +27,38 @@ Write an executive overview (2–3 sentences) that:
 - highlights the primary negotiation themes,
 - mentions that {low_count} Low-risk clauses require no immediate attention.
 
-For every flagged clause, generate one negotiation point in the exact order provided.
+Provide primary_focus: 3–5 cross-cutting negotiation themes (e.g. Liability Cap, IP Ownership, Payment Terms).
 
-Each negotiation summary should:
-- explain why negotiation is recommended,
-- recommend one clear negotiation objective,
-- remain under 40 words,
-- use concise, professional language,
-- avoid unnecessary legal jargon,
-- be specific to the clause,
-- avoid repeating advice across clauses,
-- try to explain in simple words.
+Provide overall_recommendation: 1–2 sentences stating the recommended negotiation posture and top priorities.
+
+Provide overall_negotiation_strategy: a short paragraph describing how to approach the negotiation.
+
+Provide top_redlines: 3–5 must-win negotiation items as concise bullet strings.
+
+Provide deal_breakers: 2–4 non-negotiable walk-away issues as concise bullet strings.
+
+For every flagged clause, generate exactly one negotiation point.
+Include every flagged clause exactly once; order in JSON does not matter.
+Each point must include the matching clause_id from the input.
+
+For each negotiation point:
+- clause_title: a short descriptive label (6 words or fewer), no clause IDs,
+- negotiation_summary: recommendation only (one clear negotiation objective),
+  under 40 words, concise and professional, specific to the clause,
+  not copied verbatim from the rationale.
 
 Do NOT:
-- reorder clauses,
 - omit clauses,
 - invent facts,
 - introduce new legal risks,
 - discuss Low-risk clauses individually,
-- copy the clause summary verbatim.
+- copy the clause rationale verbatim into negotiation_summary.
 
 Return only JSON matching the required schema.
 """
 
-def generate_brief(contract_id: str) -> tuple[NegotiationBrief, list[dict]]:
+
+def generate_brief(contract_id: str) -> tuple[NegotiationBrief, list[dict], int]:
     flagged_rows, low_count = get_prioritized_rows(contract_id)
 
     prompt = SYNTHESIS_PROMPT.format(
@@ -69,11 +76,14 @@ def generate_brief(contract_id: str) -> tuple[NegotiationBrief, list[dict]]:
     )
 
     brief = NegotiationBrief.model_validate(json.loads(response.text))
-    return brief, flagged_rows
+    return brief, flagged_rows, low_count
+
 
 def _format_clauses(rows: list[dict]) -> str:
     return '\n\n'.join(
-        f"[{r['clause_id']}] {r['section']} - {r['risk_level']}\n"
-        f"Rationale: {r['rationale']}\nSuggested language: {r['suggested_language']}"
+        f"Clause ID: {r['clause_id']}\n"
+        f"Section: {r['section']} - {r['risk_level']}\n"
+        f"Rationale: {r['rationale']}\n"
+        f"Suggested language: {r['suggested_language']}"
         for r in rows
     )

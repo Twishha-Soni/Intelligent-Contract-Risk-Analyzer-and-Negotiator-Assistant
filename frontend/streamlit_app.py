@@ -146,22 +146,23 @@ with st.container(border=True):
         st.info("Upload and analyze a contract to generate the negotiation brief.")
     else:
         contract_id = st.session_state["contract_id"]
-
+        
         if st.button(
             "📄 Generate Negotiation Brief",
             use_container_width=True
         ):
-            resp = requests.get(
-                f"{API_URL}/contracts/{contract_id}/brief"
-            )
-
-            if resp.ok:
-                st.download_button(
-                    "⬇️ Download Brief PDF",
-                    data=resp.content,
-                    file_name=f"negotiation_brief_{contract_id}.pdf",
-                    mime="application/pdf",
-                    use_container_width=True
+            with st.spinner("Generating Negotiation Brief..."):
+                resp = requests.get(
+                    f"{API_URL}/contracts/{contract_id}/brief"
                 )
-            else:
-                st.error(resp.text)
+
+                if resp.ok:
+                    st.download_button(
+                        "⬇️ Download Brief PDF",
+                        data=resp.content,
+                        file_name=f"negotiation_brief_{contract_id}.pdf",
+                        mime="application/pdf",
+                        use_container_width=True
+                    )
+                else:
+                    st.error(resp.text)

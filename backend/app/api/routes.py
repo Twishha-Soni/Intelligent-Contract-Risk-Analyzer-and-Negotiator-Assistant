@@ -74,10 +74,10 @@ async def analyze_contract(file: UploadFile):
 
 @router.get('/contracts/{contract_id}/brief')
 async def get_brief(contract_id: str):
-    brief, flagged_rows = generate_brief(contract_id)
+    brief, flagged_rows, low_count = generate_brief(contract_id)
     if not flagged_rows:
         raise HTTPException(status_code=404, detail='No flagged clauses to summarize')
 
     output_path = f'app/database/tempDB/negotiation_brief_{contract_id}.pdf'
-    export_brief_pdf(brief, output_path, contract_id)
+    export_brief_pdf(brief, flagged_rows, low_count, output_path, contract_id)
     return FileResponse(output_path, media_type='application/pdf', filename=f'{contract_id}_negotiation_brief.pdf')
